@@ -202,6 +202,97 @@
             <p class="text-xl md:text-2xl max-w-2xl mx-auto mb-10 text-gray-300">
                 Begin your adventure to the stars. fill out the form below to reserve your spot on our next space voyage
             </p>
+            <section
+                class="max-w-2xl mx-auto bg-space-blue/70 mt-8 rounded-xl p-8 shadow-lg border border-neon-blue/30">
+                <h2 class="font-orbitron text-2xl mb-6 text-left">Journey Details</h2>
+                <form>
+                    <!-- Destination -->
+                    <div class="mb-4">
+                        <label class="block mb-1 text-gray-300 text-left">Destination</label>
+                        <select class="w-full rounded-lg px-3 py-2 bg-space-dark/70 text-white focus:ring-neon-blue">
+                            <option>Select your destination</option>
+                            <option>Mars</option>
+                            <option>Moon</option>
+                            <option>Europa</option>
+                            <option>Titan</option>
+                        </select>
+                    </div>
+                    <!-- Departure Date -->
+                    <div class="mb-4">
+                        <label class="block mb-1 text-gray-300 text-left">Departure Date</label>
+                        <input type="date"
+                            class="w-full rounded-lg px-3 py-2 bg-space-dark/70 text-white focus:ring-neon-blue" />
+                    </div>
+                    <!-- Number of Passengers -->
+                    <div class="mb-4">
+                        <label class="block mb-2 text-gray-300">Number of Passengers</label>
+                        <div class="flex gap-6">
+                            <label class="flex items-center gap-2">
+                                <input type="radio" name="passengers" class="accent-neon-blue" checked />
+                                <span>Solo Traveler</span>
+                            </label>
+                            <label class="flex items-center gap-2">
+                                <input type="radio" name="passengers" class="accent-neon-blue" />
+                                <span>Couple (2)</span>
+                            </label>
+                            <label class="flex items-center gap-2">
+                                <input type="radio" name="passengers" class="accent-neon-blue" />
+                                <span>Group (3-6)</span>
+                            </label>
+                        </div>
+                    </div>
+                    <!-- Accommodation Type -->
+                    <div class="mb-6">
+                        <label class="block mb-2 text-gray-300">Accommodation Type</label>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div
+                                class="card-hover p-4 rounded-lg cursor-pointer border border-neon-blue/30 hover:border-neon-blue">
+                                <h3 class="font-bold mb-2 text-neon-blue">Standard Cabin</h3>
+                                <p class="text-gray-400 text-sm">Comfortable private quarters with basic amenities</p>
+                            </div>
+                            <div
+                                class="card-hover p-4 rounded-lg cursor-pointer border border-neon-blue/30 hover:border-neon-blue">
+                                <h3 class="font-bold mb-2 text-neon-purple">Luxury Suite</h3>
+                                <p class="text-gray-400 text-sm">Spacious suite with premium amenities and viewports</p>
+                            </div>
+                            <div
+                                class="card-hover p-4 rounded-lg cursor-pointer border border-neon-blue/30 hover:border-neon-blue">
+                                <h3 class="font-bold mb-2 text-neon-cyan">Zero-G Pod</h3>
+                                <p class="text-gray-400 text-sm">Advanced accommodation with zero-gravity experience</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Personal Information -->
+                    <h2 class="font-orbitron text-2xl mb-4 mt-8 text-neon-blue text-center">Personal Information</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <input type="text" placeholder="Enter your first name"
+                            class="rounded-lg px-3 py-2 bg-space-dark/70 text-white focus:ring-neon-blue" />
+                        <input type="text" placeholder="Enter your last name"
+                            class="rounded-lg px-3 py-2 bg-space-dark/70 text-white focus:ring-neon-blue" />
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <input type="email" placeholder="Enter your email"
+                            class="rounded-lg px-3 py-2 bg-space-dark/70 text-white focus:ring-neon-blue" />
+                        <input type="text" placeholder="Enter your phone number"
+                            class="rounded-lg px-3 py-2 bg-space-dark/70 text-white focus:ring-neon-blue" />
+                    </div>
+                    <div class="mb-6">
+                        <textarea placeholder="Any special requirements or notes..." rows="3"
+                            class="w-full rounded-lg px-3 py-2 bg-space-dark/70 text-white focus:ring-neon-blue"></textarea>
+                    </div>
+                    <!-- Add Passenger Button -->
+                    <button type="button"
+                        class="w-full mb-4 py-3 rounded-lg bg-space-purple/80 text-white font-semibold hover:bg-neon-purple/70 transition btn-primary">Add
+                        Passenger</button>
+                    <!-- Confirm Booking Button -->
+                    <button type="submit"
+                        class="w-full py-3 rounded-lg font-orbitron text-lg font-bold text-white text-glow btn-primary">Confirm
+                        Booking</button>
+                    <p class="mt-4 text-xs text-center text-gray-400">By confirming, you agree to our <a href="#"
+                            class="underline text-neon-blue">Terms of Service</a> and <a href="#"
+                            class="underline text-neon-blue">Space Travel Agreement</a>.</p>
+                </form>
+            </section>
 
 
 
