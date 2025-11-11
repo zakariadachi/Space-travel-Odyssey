@@ -28,4 +28,15 @@ function saveSession(user, remember) {
     }
 }
 
+// Charger session
+function getSession() {
+    const data = localStorage.getItem(SESSION_KEY);
+    return data ? JSON.parse(data) : null;
+}
+
+// Vérifier si connecté
+function loggedIn() {
+    const session = getSession();
+    return session && session.loggedIn;
+}
 
