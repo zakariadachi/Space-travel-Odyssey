@@ -1,138 +1,98 @@
-// Utilisateurs simulés
-const users = [
+// ==== Fake Users ====
+const USERS = [
     { email: "user1@space.com", password: "pass1234", name: "Jane Doe" },
     { email: "user2@space.com", password: "moonbase42", name: "John Moon" }
 ];
 
-// Clés de stockage
+// ==== Storage Keys ====
 const SESSION_KEY = "session";
-const CREDENTIALS_KEY = "credentials";
 
-// Redirections
-const LOGIN_PAGE = "/login.html";
-const HOME_PAGE = "/index.html";
+// ==== Simple Session Helpers ====
+function findUser(email, password) {
+    return USERS.find(u => u.email === email && u.password === password);
+}
 
-// Sauvegarder session
-function saveSession(user, remember) {
-    const session = {
-        loggedIn: true,
+function saveSession(user) {
+    localStorage.setItem(SESSION_KEY, JSON.stringify({
+        isLoggedIn: true,
         email: user.email,
         name: user.name,
-        time: new Date().toISOString()
-    };
-    localStorage.setItem(SESSION_KEY, JSON.stringify(session));
-    if (remember) {
-        localStorage.setItem(CREDENTIALS_KEY, JSON.stringify({ email: user.email }));
-    } else {
-        localStorage.removeItem(CREDENTIALS_KEY);
-    }
+        loginAt: new Date().toISOString()
+    }));
 }
 
-// Charger session
 function getSession() {
-    const data = localStorage.getItem(SESSION_KEY);
-    return data ? JSON.parse(data) : null;
+    const s = localStorage.getItem(SESSION_KEY);
+    return s ? JSON.parse(s) : null;
 }
 
-// Vérifier si connecté
-function loggedIn() {
-    const session = getSession();
-    return session && session.loggedIn;
-}
-
-// Supprimer session
-function logout() {
+function clearSession() {
     localStorage.removeItem(SESSION_KEY);
 }
 
-// Chercher utilisateur
-function findUser(email, password) {
-    return users.find(u => u.email === email && u.password === password);
+function isLoggedIn() {
+    const s = getSession();
+    return s && s.isLoggedIn;
 }
 
-// Mise à jour du header avec état connexion
-function updateNavbar() {
-    const slot = document.querySelector("#account-slot");
-    const loginLinks = document.querySelectorAll('a[href*="login"]');
-    if (loggedIn()) {
-        loginLinks.forEach(a => a.style.display = "none");
-        if (slot) {
-            const session = getSession();
-            slot.innerHTML = `Hi, ${session.name} <button id="logout">Logout</button>`;
-            slot.style.display = "block";
-            document.querySelector("#logout").onclick = () => {
-                logout();
-                slot.style.display = "none";
-                loginLinks.forEach(a => a.style.display = "inline");
-            };
-        }
+// ==== Header UI: Show user or logout ====
+function updateHeader() {
+    const slot = document.getElementById("account-slot");
+    if (!slot) return;
+    slot.innerHTML = ""; // Clean
+    if (isLoggedIn()) {
+        const user = getSession();
+        slot.classList.remove("hidden");
+        slot.innerHTML = `
+            <span>Hi, ${user.name}</span>
+            <button id="logout-btn" class="ml-4 px-3 py-1 rounded bg-neon-blue text-white font-bold">Logout</button>
+        `;
+        document.getElementById("logout-btn").onclick = function() {
+            clearSession();
+            updateHeader();
+            window.location.reload(); // Option: refresh to update UI
+        };
     } else {
-        loginLinks.forEach(a => a.style.display = "inline");
-        if (slot) {
-            slot.style.display = "none";
-            slot.innerHTML = "";
-        }
+        slot.classList.add("hidden");
     }
 }
 
-// Protection des pages
-function protectPage() {
-    if (document.body.dataset.protected === "true" && !loggedIn()) {
-        window.location.href = LOGIN_PAGE;
-    }
-}
-
-// Gestion du formulaire de connexion
-function setupLogin() {
-    const form = document.querySelector("form");
+// ==== Login Form Logic ====
+function setupLoginForm() {
+    const form = document.getElementById("login-form");
     if (!form) return;
-
-    if (loggedIn()) {
-        window.location.href = HOME_PAGE;
-        return;
-    }
-
-    const emailField = document.querySelector("input[type=email]");
-    const passField = document.querySelector("input[type=password]");
-    const rememberField = document.querySelector("input[type=checkbox]");
-    const msg = document.querySelector("#login-msg");
-
-    // Remplir email sauvegardé
-    const saved = localStorage.getItem(CREDENTIALS_KEY);
-    if (saved && emailField) {
-        emailField.value = JSON.parse(saved).email || "";
-        if (rememberField) rememberField.checked = true;
-    }
-
-    form.onsubmit = e => {
+    form.addEventListener("submit", function(e) {
         e.preventDefault();
-        const email = emailField.value.trim();
-        const password = passField.value;
-        const remember = rememberField ? rememberField.checked : false;
+        const email = form.querySelector('input[type="email"]').value.trim();
+        const password = form.querySelector('input[type="password"]').value;
+        const msg = document.getElementById("login-msg");
 
         if (!email || !password) {
-            if (msg) msg.textContent = "Veuillez saisir votre email et mot de passe.";
-            else alert("Veuillez saisir votre email et mot de passe.");
+            if (msg) msg.textContent = "Please enter email and password.";
+            else alert("Please enter email and password.");
             return;
         }
 
         const user = findUser(email, password);
         if (!user) {
-            if (msg) msg.textContent = "Identifiants incorrects.";
-            else alert("Identifiants incorrects.");
+            if (msg) msg.textContent = "Invalid credentials.";
+            else alert("Invalid credentials.");
             return;
         }
-
-        saveSession(user, remember);
-
-        if (msg) msg.textContent = "Connexion réussie. Redirection...";
-        setTimeout(() => window.location.href = HOME_PAGE, 250);
-    };
+        saveSession(user);
+        if (msg) msg.textContent = "Login successful! Redirecting...";
+        setTimeout(() => {
+            window.location.href = "index.html";
+        }, 300);
+    });
 }
 
-// Initialisation au chargement
-document.addEventListener("DOMContentLoaded", () => {
-    updateNavbar();
-    protectPage();
-    setupLogin();
+// ==== On page load ====
+document.addEventListener("DOMContentLoaded", function() {
+    updateHeader();
+    setupLoginForm();
+    // Page protection (optional)
+    if (document.body.dataset.protected === "true" && !isLoggedIn()) {
+        window.location.href = "login.html";
+    }
 });
