@@ -1,13 +1,13 @@
-// ==== Fake Users ====
+// === Utilisateurs simulés ===
 const USERS = [
     { email: "user1@space.com", password: "pass1234", name: "Jane Doe" },
     { email: "user2@space.com", password: "moonbase42", name: "John Moon" }
 ];
 
-// ==== Storage Keys ====
+// === Clé localStorage ===
 const SESSION_KEY = "session";
 
-// ==== Simple Session Helpers ====
+// === Helpers ===
 function findUser(email, password) {
     return USERS.find(u => u.email === email && u.password === password);
 }
@@ -35,11 +35,12 @@ function isLoggedIn() {
     return s && s.isLoggedIn;
 }
 
-// ==== Header UI: Show user or logout ====
+// === Met à jour le header (nom, logout) et cache/affiche lien login ===
 function updateHeader() {
     const slot = document.getElementById("account-slot");
+    const loginLinks = document.querySelectorAll('a[href*="login"]');
     if (!slot) return;
-    slot.innerHTML = ""; // Clean
+    slot.innerHTML = "";
     if (isLoggedIn()) {
         const user = getSession();
         slot.classList.remove("hidden");
@@ -47,17 +48,19 @@ function updateHeader() {
             <span>Hi, ${user.name}</span>
             <button id="logout-btn" class="ml-4 px-3 py-1 rounded bg-neon-blue text-white font-bold">Logout</button>
         `;
+        loginLinks.forEach(a => a.style.display = "none");
         document.getElementById("logout-btn").onclick = function() {
             clearSession();
             updateHeader();
-            window.location.reload(); // Option: refresh to update UI
+            window.location.reload();
         };
     } else {
         slot.classList.add("hidden");
+        loginLinks.forEach(a => a.style.display = "inline");
     }
 }
 
-// ==== Login Form Logic ====
+// === Configuration du formulaire login ===
 function setupLoginForm() {
     const form = document.getElementById("login-form");
     if (!form) return;
@@ -68,31 +71,36 @@ function setupLoginForm() {
         const msg = document.getElementById("login-msg");
 
         if (!email || !password) {
-            if (msg) msg.textContent = "Please enter email and password.";
-            else alert("Please enter email and password.");
+            if (msg) msg.textContent = "Veuillez saisir votre email et mot de passe.";
+            else alert("Veuillez saisir votre email et mot de passe.");
             return;
         }
 
         const user = findUser(email, password);
         if (!user) {
-            if (msg) msg.textContent = "Invalid credentials.";
-            else alert("Invalid credentials.");
+            if (msg) msg.textContent = "Identifiants incorrects.";
+            else alert("Identifiants incorrects.");
             return;
         }
+
         saveSession(user);
-        if (msg) msg.textContent = "Login successful! Redirecting...";
+        if (msg) msg.textContent = "Connexion réussie. Redirection...";
         setTimeout(() => {
             window.location.href = "index.html";
         }, 300);
     });
 }
 
-// ==== On page load ====
-document.addEventListener("DOMContentLoaded", function() {
-    updateHeader();
-    setupLoginForm();
-    // Page protection (optional)
+// === Protection des pages ===
+function protectPage() {
     if (document.body.dataset.protected === "true" && !isLoggedIn()) {
         window.location.href = "login.html";
     }
+}
+
+// === Initialisation ===
+document.addEventListener("DOMContentLoaded", function() {
+    updateHeader();
+    setupLoginForm();
+    protectPage();
 });
