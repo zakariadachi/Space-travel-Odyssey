@@ -355,48 +355,6 @@
                 <!-- Options will be populated by JavaScript -->
               </select>
 
-              <!-- Destination Info Display -->
-              <div id="destination-info" class="destination-info hidden">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <h3
-                      class="font-orbitron text-neon-blue mb-2"
-                      id="destination-name"
-                    ></h3>
-                    <p
-                      class="text-sm text-gray-300"
-                      id="destination-description"
-                    ></p>
-                  </div>
-                  <div class="text-sm">
-                    <div class="flex justify-between mb-1">
-                      <span class="text-gray-400">Travel Duration:</span>
-                      <span id="destination-duration"></span>
-                    </div>
-                    <div class="flex justify-between mb-1">
-                      <span class="text-gray-400">Distance:</span>
-                      <span id="destination-distance"></span>
-                    </div>
-                    <div class="flex justify-between mb-1">
-                      <span class="text-gray-400">Gravity:</span>
-                      <span id="destination-gravity"></span>
-                    </div>
-                    <div class="flex justify-between mb-1">
-                      <span class="text-gray-400">Temperature:</span>
-                      <span id="destination-temperature"></span>
-                    </div>
-                    <div class="flex justify-between">
-                      <span class="text-gray-400">Price:</span>
-                      <span
-                        class="font-bold text-neon-cyan"
-                        id="destination-price"
-                      ></span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
             <!-- Departure Date -->
             <div class="mb-6">
               <label class="block mb-2 text-gray-300">Departure Date</label>
@@ -458,6 +416,48 @@
             </div>
           </div>
 
+                <!-- Destination Info Display -->
+              <div id="destination-info" class="destination-info hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <h3
+                      class="font-orbitron text-neon-blue mb-2"
+                      id="destination-name"
+                    ></h3>
+                    <p
+                      class="text-sm text-gray-300"
+                      id="destination-description"
+                    ></p>
+                  </div>
+                  <div class="text-sm">
+                    <div class="flex justify-between mb-1">
+                      <span class="text-gray-400">Travel Duration:</span>
+                      <span id="destination-duration"></span>
+                    </div>
+                    <div class="flex justify-between mb-1">
+                      <span class="text-gray-400">Distance:</span>
+                      <span id="destination-distance"></span>
+                    </div>
+                    <div class="flex justify-between mb-1">
+                      <span class="text-gray-400">Gravity:</span>
+                      <span id="destination-gravity"></span>
+                    </div>
+                    <div class="flex justify-between mb-1">
+                      <span class="text-gray-400">Temperature:</span>
+                      <span id="destination-temperature"></span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span class="text-gray-400">Price:</span>
+                      <span
+                        class="font-bold text-neon-cyan"
+                        id="destination-price"
+                      ></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           <!-- Personal Information Section -->
           <div class="mb-8">
             <h2 class="font-orbitron text-2xl mb-6">Personal Information</h2>
@@ -470,7 +470,6 @@
                   <h3 class="font-orbitron text-neon-blue">
                     Primary Passenger
                   </h3>
-                  <!-- No remove button for primary passenger -->
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -545,6 +544,15 @@
                 </div>
               </div>
             </div>
+
+<!-- Total Price  -->
+<div id="total-price-display" class="hidden text-center mb-6">
+    <div class="bg-space-dark/50 border border-neon-cyan/30 rounded-lg p-4">
+        <h3 class="font-orbitron text-neon-cyan text-xl mb-2">Estimated Total</h3>
+        <div class="text-2xl font-bold text-white glow" id="total-price-amount">$0</div>
+        <div id="price-details" class="mt-3"></div>
+    </div>
+</div>
 
             <!-- Action Buttons -->
             <div class="flex flex-col md:flex-row gap-4 mb-6">

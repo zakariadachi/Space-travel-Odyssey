@@ -86,8 +86,8 @@ body::before {
 }
 
 @keyframes twinkle {
-  0%, 100% { 
-    opacity: 0.2; 
+  0%, 100% {
+    opacity: 0.2;
     transform: scale(1);
   }
   50% { 
@@ -855,4 +855,21 @@ h4 { font-size: clamp(1.25rem, 2.5vw, 1.5rem); }
 /* Dark mode is default, but this ensures compatibility */
 @media (prefers-color-scheme: light) {
   /* Light mode overrides if needed in future */
+}
+
+.input-error {
+    border-color: rgb(239 68 68) !important;
+    box-shadow: 0 0 5px rgba(239, 68, 68, 0.3) !important;
+}
+
+.input-success {
+    border-color: rgb(34 197 94) !important;
+    box-shadow: 0 0 5px rgba(34, 197, 94, 0.3) !important;
+}
+
+.error-message {
+    color: rgb(239 68 68);
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    display: none;
 }
