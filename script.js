@@ -12,7 +12,7 @@ const PENDING_BOOKING_KEY = "pendingBooking";
 const patterns = {
   name: /^[A-Za-zÀ-ÿ\s'-]{3,}$/,
   email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-  phone: /^\+212 \s[6-7]\s?\d{2}\s?\d{2}\s?\d{2}\s?\d{2}\s?$/
+  phone: /^\+212\s[6-7]\s?\d{2}\s?\d{2}\s?\d{2}\s?\d{2}\s?$/
 };
 
 // Variables globales
@@ -276,9 +276,9 @@ function setupLoginForm() {
         saveSession(user);        
         const pendingBooking = localStorage.getItem(PENDING_BOOKING_KEY);
         if (pendingBooking) {
-            window.location.href = "booking.html";
-        } else {
             window.location.href = "index.html";
+        } else {
+            window.location.href = "booking.html";
         }
     });
 }
