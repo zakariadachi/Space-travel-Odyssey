@@ -21,6 +21,125 @@ let destinationsData = [];
 let passengerCount = 1;
 let maxPassengers = 1;
 
+// === PRICE CALCULATION ===
+function calculateTotalPrice() {
+    const destinationSelect = document.getElementById("destination");
+    const accommodation = document.getElementById("accommodation");
+    
+    if (!destinationSelect.value || !accommodation.value) {
+        return 0;
+    }
+    
+    // Get destination price and travel days
+    const selectedDestination = destinationsData.find(dest => dest.id === destinationSelect.value);
+    if (!selectedDestination) return 0;
+    
+    const destinationPrice = selectedDestination.price;
+    const travelDays = selectedDestination.travelDays;
+    
+    // Get accommodation price per day
+    const selectedAccommodation = accommodationsData.find(acc => acc.id === accommodation.value);
+    if (!selectedAccommodation) return 0;
+    
+    const pricePerDay = selectedAccommodation.pricePerDay;
+    
+    // Get number of passengers
+    const passengerForms = document.querySelectorAll(".passenger-form");
+    const numberOfPersons = passengerForms.length;
+    
+    // Calculate total price: destinationPrice + (travelDays * 2 * pricePerDay * numberOfPersons)
+    const totalPrice = destinationPrice + (travelDays * 2 * pricePerDay * numberOfPersons);
+    
+    return totalPrice;
+}
+
+function updatePriceDisplay() {
+    const totalPrice = calculateTotalPrice();
+    const priceDisplay = document.getElementById("total-price-display");
+    const priceAmount = document.getElementById("total-price-amount");
+    const priceDetails = document.getElementById("price-details");
+    
+    if (priceDisplay && priceAmount && totalPrice > 0) {
+        const destinationSelect = document.getElementById("destination");
+        const accommodation = document.getElementById("accommodation");
+        const passengerForms = document.querySelectorAll(".passenger-form");
+        
+        const selectedDestination = destinationsData.find(dest => dest.id === destinationSelect.value);
+        const selectedAccommodation = accommodationsData.find(acc => acc.id === accommodation.value);
+        
+        if (selectedDestination && selectedAccommodation) {
+            const destinationPrice = selectedDestination.price;
+            const travelDays = selectedDestination.travelDays;
+            const pricePerDay = selectedAccommodation.pricePerDay;
+            const numberOfPersons = passengerForms.length;
+            
+            priceAmount.textContent = `$${totalPrice.toLocaleString()}`;
+            
+            // Afficher les détails du calcul
+            if (priceDetails) {
+                priceDetails.innerHTML = `
+                    <div class="text-left text-sm space-y-1 mt-2">
+                        <div class="flex justify-between">
+                            <span>Destination base price:</span>
+                            <span>$${destinationPrice.toLocaleString()}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Travel days:</span>
+                            <span>${travelDays} days × 2</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Accommodation (${selectedAccommodation.name}):</span>
+                            <span>$${pricePerDay.toLocaleString()}/day</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Number of passengers:</span>
+                            <span>${numberOfPersons}</span>
+                        </div>
+                        <div class="border-t border-gray-600 pt-1 mt-1">
+                            <div class="flex justify-between font-bold">
+                                <span>Total:</span>
+                                <span>$${totalPrice.toLocaleString()}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            priceDisplay.classList.remove("hidden");
+        }
+    } else if (priceDisplay) {
+        priceDisplay.classList.add("hidden");
+    }
+}
+
+function setupPriceCalculation() {
+    // Écouter les changements sur tous les éléments qui affectent le prix
+    const elementsToWatch = [
+        document.getElementById("destination"),
+        document.getElementById("departure-date"),
+        document.getElementById("accommodation")
+    ];
+    
+    elementsToWatch.forEach(element => {
+        if (element) {
+            element.addEventListener("change", updatePriceDisplay);
+        }
+    });
+    
+    // Écouter les changements de passagers
+    document.addEventListener("passengerCountChanged", updatePriceDisplay);
+    
+    // Écouter les changements sur les radios de passagers
+    const passengerRadios = document.querySelectorAll('input[name="passengers"]');
+    passengerRadios.forEach(radio => {
+        radio.addEventListener("change", function() {
+            setTimeout(updatePriceDisplay, 100);
+        });
+    });
+    
+    // Mettre à jour initialement
+    updatePriceDisplay();
+}
 
 // === VALIDATION SYSTEM ===
 function validateField(input) {
