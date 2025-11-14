@@ -276,29 +276,6 @@
         </div>
     </main>
 
-    <!-- Print Ticket Modal -->
-    <div id="print-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-hidden">
-            <!-- Modal Header -->
-            <div class="bg-gradient-to-r from-neon-blue to-neon-purple text-white p-6 flex justify-between items-center">
-                <h2 class="font-orbitron text-2xl">SpaceVoyager - Boarding Ticket</h2>
-                <div class="flex space-x-3">
-                    <button onclick="printTicket()" class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg transition-colors flex items-center">
-                        <i class="fas fa-print mr-2"></i>Print
-                    </button>
-                    <button onclick="closePrintModal()" class="bg-red-500/20 hover:bg-red-500/30 text-white px-4 py-2 rounded-lg transition-colors">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Ticket Content -->
-            <div class="p-6 overflow-y-auto max-h-[70vh]" id="print-content">
-                <!-- Ticket content will be loaded here dynamically -->
-            </div>
-        </div>
-    </div>
-
     <!-- Footer -->
     <footer class="bg-space-dark border-t border-neon-blue/20 py-8 mt-12 relative z-10">
         <div class="container mx-auto px-4">

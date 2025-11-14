@@ -32,25 +32,19 @@ function calculateTotalPrice() {
     if (!destinationSelect || !destinationSelect.value || !accommodation || !accommodation.value) {
         return 0;
     }
-    
-    // Get destination price and travel days
     const selectedDestination = destinationsData.find(dest => dest.id === destinationSelect.value);
     if (!selectedDestination) return 0;
-    
     const destinationPrice = selectedDestination.price;
     const travelDays = selectedDestination.travelDays || 1;
-    
-    // Get accommodation price per day
     const selectedAccommodation = accommodationsData.find(acc => acc.id === accommodation.value);
     if (!selectedAccommodation) return 0;
     
     const pricePerDay = selectedAccommodation.pricePerDay;
     
-    // Get number of passengers
     const passengerForms = document.querySelectorAll(".passenger-form");
     const numberOfPersons = passengerForms.length;
     
-    // Calculate total price: destinationPrice + (travelDays * 2 * pricePerDay * numberOfPersons)
+    // Calculate total price
     const totalPrice = destinationPrice + (travelDays * 2 * pricePerDay * numberOfPersons);
     
     return totalPrice;
@@ -116,7 +110,6 @@ function updatePriceDisplay() {
 }
 
 function setupPriceCalculation() {
-    // Écouter les changements sur tous les éléments qui affectent le prix
     const elementsToWatch = [
         document.getElementById("destination"),
         document.getElementById("departure-date"),
@@ -129,18 +122,15 @@ function setupPriceCalculation() {
         }
     });
     
-    // Écouter les changements de passagers
     document.addEventListener("passengerCountChanged", updatePriceDisplay);
     
-    // Écouter les changements sur les radios de passagers
     const passengerRadios = document.querySelectorAll('input[name="passengers"]');
     passengerRadios.forEach(radio => {
         radio.addEventListener("change", function() {
             setTimeout(updatePriceDisplay, 100);
         });
     });
-    
-    // Mettre à jour initialement
+
     updatePriceDisplay();
 }
 
@@ -304,7 +294,6 @@ function setupLoginForm() {
         saveSession(user);        
         const pendingBooking = localStorage.getItem(PENDING_BOOKING_KEY);
         if (pendingBooking) {
-            // Rediriger vers la page de réservation si une réservation était en attente
             window.location.href = "booking.html";
         } else {
             window.location.href = "index.html";
@@ -334,15 +323,11 @@ function getBookings() {
 
 function loadBookings() {
     const container = document.getElementById("bookings-container");
-    // const totalBookingsEl = document.getElementById("total-bookings");
     const confirmedBookingsEl = document.getElementById("confirmed-bookings");
     const totalSpentEl = document.getElementById("total-spent");
     
     if (!container) return;
-    
     const bookings = getBookings();
-    
-    // Update stats
     if (totalBookingsEl) totalBookingsEl.textContent = bookings.length;
     if (confirmedBookingsEl) confirmedBookingsEl.textContent = bookings.filter(b => b.status === 'confirmed').length;
     
@@ -365,7 +350,7 @@ function loadBookings() {
         return;
     }
     
-    // Afficher les réservations AVEC LE BOUTON PRINT DIRECT
+    // Afficher les réservations
     container.innerHTML = bookings.map(booking => `
         <div class="booking-card p-6 mb-6">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
@@ -400,9 +385,9 @@ function loadBookings() {
                 </div>
             </div>
 
-            <!-- ⭐⭐⭐ BOUTON PRINT DIRECT ⭐⭐⭐ -->
+            <!-- BOUTON PRINT -->
             <div class="flex justify-end space-x-3 mt-6 pt-4 border-t border-neon-blue/20">
-                <button onclick="printTicketDirect('${booking.id}')" 
+                <button onclick="printTicket('${booking.id}')" 
                         class="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition-all flex items-center glow">
                     <i class="fas fa-print mr-2"></i>
                     Print Ticket
@@ -424,8 +409,8 @@ function loadBookings() {
     `).join('');
 }
 
-// Fonction pour imprimer directement sans modal
-function printTicketDirect(bookingId) {
+// Imprimer ticket
+function printTicket(bookingId) {
     const bookings = getBookings();
     const booking = bookings.find(b => b.id === bookingId);
     
@@ -434,13 +419,8 @@ function printTicketDirect(bookingId) {
         return;
     }
 
-    // Générer le contenu du ticket
     const ticketContent = generateTicketContent(booking);
-    
-    // Créer une fenêtre d'impression directement
     const printWindow = window.open('', '_blank', 'width=800,height=600');
-    
-    // HTML complet pour l'impression
     printWindow.document.write(`
         <!DOCTYPE html>
         <html>
@@ -608,17 +588,12 @@ function printTicketDirect(bookingId) {
     
     printWindow.document.close();
     printWindow.focus();
-    
-    // Attendre que le contenu soit chargé puis imprimer
     setTimeout(() => {
         printWindow.print();
-        // Optionnel: Fermer la fenêtre après un délai
         setTimeout(() => {
             printWindow.close();
-            // Afficher un message de confirmation
-            alert('Ticket sent to printer!');
         }, 500);
-    }, 1000);
+    },500);
 }
 
 // === BOOKING PAGE FUNCTIONS ===
@@ -691,7 +666,7 @@ function updateMaxPassengers() {
     }
 }
 
-// === PASSENGER MANAGEMENT ===
+// === Gestion de passanger ===
 function addPassengerForm() {
     if (passengerCount < maxPassengers) {
         passengerCount++;
@@ -777,7 +752,6 @@ function removePassengerForm(index) {
 // === DATA LOADING ===
 async function loadAccommodations() {
     try {
-        // Fallback data si le fichier n'existe pas
         const fallbackData = {
             accommodations: [
                 {
@@ -828,7 +802,6 @@ async function loadAccommodations() {
 
 async function loadDestinations() {
     try {
-        // Fallback data si le fichier n'existe pas
         const fallbackData = {
             destinations: [
                 {
@@ -1015,7 +988,6 @@ function loadFormData() {
 
     const formData = JSON.parse(savedData);
     
-    // Restaurer les données du formulaire
     if (formData.destination) {
         document.getElementById("destination").value = formData.destination;
         document.getElementById("destination").dispatchEvent(new Event('change'));
@@ -1040,9 +1012,7 @@ function loadFormData() {
         }
     }
     
-    // Restaurer les données des passagers
     if (formData.passengerForms && formData.passengerForms.length > 0) {
-        // Supprimer les formulaires de passagers existants sauf le premier
         const passengerForms = document.querySelectorAll(".passenger-form");
         for (let i = passengerForms.length - 1; i > 0; i--) {
             passengerForms[i].remove();
@@ -1050,12 +1020,10 @@ function loadFormData() {
         
         passengerCount = 1;
         
-        // Ajouter les formulaires supplémentaires
         for (let i = 1; i < formData.passengerForms.length; i++) {
             addPassengerForm();
         }
         
-        // Remplir les données
         const allPassengerForms = document.querySelectorAll(".passenger-form");
         formData.passengerForms.forEach((passenger, index) => {
             if (allPassengerForms[index]) {
@@ -1180,7 +1148,6 @@ document.addEventListener("DOMContentLoaded", function() {
     setupLoginForm();
     setupMobileMenu();
     
-    // Page spécifique: Booking
     if (window.location.pathname.includes("booking.html")) {
         createStars();
         setupInputValidation();
@@ -1203,7 +1170,7 @@ document.addEventListener("DOMContentLoaded", function() {
         Promise.all([loadAccommodations(), loadDestinations()]).then(() => {
             setupAutoSave();
             setupPriceCalculation();
-            loadFormData(); // Charger les données sauvegardées
+            loadFormData();
         });
 
         const bookingForm = document.getElementById("booking-form");
@@ -1224,7 +1191,6 @@ document.addEventListener("DOMContentLoaded", function() {
                     return;
                 }
                 
-                // Préparer les données de réservation
                 const destinationSelect = document.getElementById("destination");
                 const selectedDestination = destinationsData.find(dest => dest.id === destinationSelect.value);
                 const selectedAccommodation = accommodationsData.find(acc => acc.id === document.getElementById("accommodation").value);
@@ -1250,14 +1216,12 @@ document.addEventListener("DOMContentLoaded", function() {
                     totalPrice: calculateTotalPrice()
                 };
                 
-                // Sauvegarder la réservation
                 saveBooking(bookingData);
                 
                 alert("Booking confirmed! Thank you for your reservation.");
                 localStorage.removeItem(BOOKING_DATA_KEY);
                 localStorage.removeItem(PENDING_BOOKING_KEY);
                 
-                // Rediriger vers la page des réservations
                 window.location.href = "my-bookings.html";
             });
         }
@@ -1267,12 +1231,9 @@ document.addEventListener("DOMContentLoaded", function() {
     if (window.location.pathname.includes("my-bookings.html")) {
         createStars();
         loadBookings();
-        
-        // Exposer la fonction refreshBookings globalement pour le bouton
         window.refreshBookings = refreshBookings;
     }
     
-    // Page spécifique: Login - Vérifier s'il y a une réservation en attente
     if (window.location.pathname.includes("login.html")) {
         const pendingBooking = localStorage.getItem(PENDING_BOOKING_KEY);
         if (pendingBooking) {
@@ -1288,238 +1249,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 
-// === TICKET PRINTING FROM MY BOOKINGS ===
-
-// // Fonction pour afficher le ticket dans un modal
-// function viewTicket(bookingId) {
-//     const bookings = getBookings();
-//     const booking = bookings.find(b => b.id === bookingId);
-    
-//     if (!booking) {
-//         alert('Booking not found');
-//         return;
-//     }
-
-//     // Générer le contenu du ticket
-//     const ticketContent = generateTicketContent(booking);
-    
-//     // Afficher le modal
-//     const printModal = document.getElementById('print-modal');
-//     const printContent = document.getElementById('print-content');
-    
-//     if (!printModal || !printContent) {
-//         console.error('Print modal elements not found');
-//         return;
-//     }
-    
-//     printContent.innerHTML = ticketContent;
-//     printModal.classList.remove('hidden');
-    
-//     // Empêcher le scroll du body
-//     document.body.style.overflow = 'hidden';
-// }
-
-// // Fonction pour fermer le modal
-// function closePrintModal() {
-//     const printModal = document.getElementById('print-modal');
-//     if (printModal) {
-//         printModal.classList.add('hidden');
-//         document.body.style.overflow = 'auto';
-//     }
-// }
-
-// // Fonction pour déclencher l'impression
-// function printTicket() {
-//     const printContent = document.getElementById('print-content');
-    
-//     if (!printContent) {
-//         alert('No ticket content to print');
-//         return;
-//     }
-
-//     // Créer une fenêtre d'impression
-//     const printWindow = window.open('', '_blank', 'width=800,height=600');
-    
-//     // HTML complet pour l'impression
-//     printWindow.document.write(`
-//         <!DOCTYPE html>
-//         <html>
-//         <head>
-//             <title>SpaceVoyager - Boarding Ticket</title>
-//             <meta charset="UTF-8">
-//             <style>
-//                 @page {
-//                     margin: 0.5cm;
-//                     size: A4;
-//                 }
-                
-//                 body {
-//                     font-family: 'Arial', sans-serif;
-//                     margin: 0;
-//                     padding: 20px;
-//                     color: #000;
-//                     background: white;
-//                 }
-                
-//                 .ticket-container {
-//                     max-width: 800px;
-//                     margin: 0 auto;
-//                     border: 3px solid #0ea5e9;
-//                     border-radius: 15px;
-//                     overflow: hidden;
-//                     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-//                 }
-                
-//                 .ticket-header {
-//                     background: linear-gradient(135deg, #0ea5e9, #8b5cf6);
-//                     color: white;
-//                     padding: 25px;
-//                 }
-                
-//                 .ticket-body {
-//                     padding: 30px;
-//                     background: white;
-//                 }
-                
-//                 .section {
-//                     margin-bottom: 25px;
-//                 }
-                
-//                 .section h3 {
-//                     color: #0ea5e9;
-//                     border-bottom: 2px solid #0ea5e9;
-//                     padding-bottom: 8px;
-//                     margin-bottom: 15px;
-//                     font-size: 18px;
-//                     font-weight: bold;
-//                 }
-                
-//                 .info-grid {
-//                     display: grid;
-//                     grid-template-columns: 1fr 1fr;
-//                     gap: 30px;
-//                 }
-                
-//                 .info-item {
-//                     display: flex;
-//                     justify-content: space-between;
-//                     border-bottom: 1px solid #eee;
-//                     padding: 10px 0;
-//                     font-size: 14px;
-//                 }
-                
-//                 .info-item strong {
-//                     color: #555;
-//                 }
-                
-//                 .passenger-card {
-//                     background: #f8f9fa;
-//                     border: 1px solid #dee2e6;
-//                     border-radius: 8px;
-//                     padding: 15px;
-//                     margin-bottom: 12px;
-//                 }
-                
-//                 .passenger-card.primary {
-//                     border-left: 4px solid #0ea5e9;
-//                 }
-                
-//                 .barcode {
-//                     text-align: center;
-//                     margin: 25px 0;
-//                     padding: 20px;
-//                     background: #f8f9fa;
-//                     border-radius: 10px;
-//                     border: 1px dashed #ccc;
-//                 }
-                
-//                 .notes {
-//                     background: #fff3cd;
-//                     border: 1px solid #ffeaa7;
-//                     border-radius: 8px;
-//                     padding: 20px;
-//                     margin: 25px 0;
-//                 }
-                
-//                 .notes h4 {
-//                     color: #856404;
-//                     margin: 0 0 12px 0;
-//                     font-size: 16px;
-//                 }
-                
-//                 .notes ul {
-//                     margin: 0;
-//                     padding-left: 20px;
-//                     font-size: 13px;
-//                     color: #856404;
-//                 }
-                
-//                 .notes li {
-//                     margin-bottom: 5px;
-//                 }
-                
-//                 .perforation {
-//                     background: repeating-linear-gradient(
-//                         to right,
-//                         transparent,
-//                         transparent 5px,
-//                         #0ea5e9 5px,
-//                         #0ea5e9 10px
-//                     );
-//                     height: 2px;
-//                     margin: 20px 0;
-//                 }
-                
-//                 .ticket-footer {
-//                     background: #f8f9fa;
-//                     padding: 15px;
-//                     text-align: center;
-//                     font-size: 12px;
-//                     color: #666;
-//                     border-top: 1px solid #dee2e6;
-//                 }
-                
-//                 @media print {
-//                     body { 
-//                         margin: 0; 
-//                         padding: 0;
-//                     }
-//                     .ticket-container { 
-//                         box-shadow: none; 
-//                         border: 3px solid #000;
-//                         margin: 0;
-//                     }
-//                     .no-print { display: none !important; }
-//                 }
-                
-//                 @media (max-width: 768px) {
-//                     .info-grid {
-//                         grid-template-columns: 1fr;
-//                         gap: 20px;
-//                     }
-//                 }
-//             </style>
-//         </head>
-//         <body>
-//             ${printContent.innerHTML}
-//         </body>
-//         </html>
-//     `);
-    
-//     printWindow.document.close();
-//     printWindow.focus();
-    
-//     // Attendre que le contenu soit chargé puis imprimer
-//     setTimeout(() => {
-//         printWindow.print();
-//         // Optionnel: Fermer la fenêtre après un délai
-//         setTimeout(() => {
-//             printWindow.close();
-//         }, 500);
-//     }, 1000);
-// }
-
-// Fonction pour générer le contenu HTML du ticket
+// Contenu de ticket
 function generateTicketContent(booking) {
     const flightNumber = generateFlightNumber(booking.destinationName);
     const barcode = `SV${booking.id.slice(-8)}`;
@@ -1598,46 +1328,11 @@ function generateTicketContent(booking) {
                         `).join('')}
                     </div>
                 </div>
-
-                <!-- Important Notes -->
-                <div class="notes">
-                    <h4>📋 IMPORTANT NOTES & REQUIREMENTS</h4>
-                    <ul>
-                        <li><strong>Check-in:</strong> Opens 3 hours before departure at SpacePort Alpha</li>
-                        <li><strong>Identification:</strong> Valid government-issued ID required for all passengers</li>
-                        <li><strong>Training:</strong> Zero-gravity training must be completed 48 hours before flight</li>
-                        <li><strong>Medical:</strong> Medical clearance certificate must be presented at check-in</li>
-                        <li><strong>Baggage:</strong> Limit: 15kg personal + 5kg cabin baggage</li>
-                        <li><strong>Documents:</strong> Bring printed ticket and all required travel documents</li>
-                    </ul>
-                </div>
-
-                <!-- Barcode -->
-                <div class="barcode">
-                    <div style="font-size: 12px; color: #666; margin-bottom: 8px; font-weight: bold;">SCAN AT SECURITY CHECKPOINT</div>
-                    <div style="display: flex; justify-content: center; gap: 3px; margin-bottom: 15px;">
-                        ${generateBarcodePattern()}
-                    </div>
-                    <div style="font-family: 'Courier New', monospace; font-size: 16px; letter-spacing: 3px; font-weight: bold; color: #333;">
-                        ${barcode}
-                    </div>
-                </div>
-            </div>
-
-            <!-- Footer -->
-            <div class="ticket-footer">
-                <p style="margin: 0 0 8px 0;">
-                    <strong>For assistance:</strong> +1 (800) SPACE-TRIP | support@spacevoyager.com
-                </p>
-                <p style="margin: 0; font-size: 11px;">
-                    Ticket issued electronically on ${new Date().toLocaleDateString()} • Please present this document at check-in
-                </p>
-            </div>
         </div>
     `;
 }
 
-// Fonction pour générer un motif de code-barres
+// code-barres
 function generateBarcodePattern() {
     const bars = [];
     for (let i = 0; i < 12; i++) {
@@ -1677,38 +1372,17 @@ function getDestinationDuration(destinationName) {
     return durations[key] || 'Unknown duration';
 }
 
-// Gestion de la fermeture du modal avec la touche Escape
-// document.addEventListener('keydown', function(event) {
-//     if (event.key === 'Escape') {
-//         closePrintModal();
-//     }
-// });
-
-// Gestion du clic en dehors du modal pour fermer
-// document.addEventListener('click', function(event) {
-//     const printModal = document.getElementById('print-modal');
-//     if (printModal && !printModal.classList.contains('hidden')) {
-//         if (event.target === printModal) {
-//             closePrintModal();
-//         }
-//     }
-// });
 
 // === FONCTIONS DE GESTION DES RÉSERVATIONS ===
 
-// Fonction pour obtenir toutes les réservations
+// Toutes les réservations
 function getBookings() {
     const bookings = localStorage.getItem('userBookings');
     return bookings ? JSON.parse(bookings) : [];
 }
 
-// Fonction pour rafraîchir l'affichage des réservations
-// function refreshBookings() {
-//     loadBookings();
-//     alert('Bookings refreshed successfully!');
-// }
 
-// Fonction pour charger et afficher les réservations
+// Afficher les réservations
 function loadBookings() {
     const container = document.getElementById('bookings-container');
     const totalBookingsEl = document.getElementById('total-bookings');
@@ -1719,7 +1393,6 @@ function loadBookings() {
     
     const bookings = getBookings();
     
-    // Mettre à jour les statistiques
     if (totalBookingsEl) totalBookingsEl.textContent = bookings.length;
     if (confirmedBookingsEl) confirmedBookingsEl.textContent = bookings.filter(b => b.status === 'confirmed').length;
     
@@ -1742,7 +1415,7 @@ function loadBookings() {
         return;
     }
     
-    // Afficher les réservations avec le bouton View Ticket
+    // View Ticket
     container.innerHTML = bookings.map(booking => `
         <div class="booking-card p-6 mb-6">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
@@ -1777,9 +1450,9 @@ function loadBookings() {
                 </div>
             </div>
 
-            <!-- ⭐⭐⭐ AJOUTEZ LE BOUTON PRINT ICI ⭐⭐⭐ -->
+            <!--  BOUTON PRINT -->
             <div class="flex justify-end space-x-3 mt-6 pt-4 border-t border-neon-blue/20">
-                <button onclick="printTicketDirect('${booking.id}')" 
+                <button onclick="printTicket('${booking.id}')" 
                         class="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition-all flex items-center glow">
                     <i class="fas fa-print mr-2"></i>
                     Print Ticket
@@ -1803,13 +1476,12 @@ function loadBookings() {
 
 // Initialisation au chargement de la page
 document.addEventListener('DOMContentLoaded', function() {
-    // Charger les réservations si on est sur la page My Bookings
     if (window.location.pathname.includes('my-bookings.html')) {
         loadBookings();
     }
 });
 
-// === FONCTIONS DE GESTION DE SESSION (si nécessaires) ===
+// === GESTION dE SESSION ===
 
 function isLoggedIn() {
     const session = localStorage.getItem('session');
@@ -1821,11 +1493,7 @@ function getSession() {
     return session ? JSON.parse(session) : null;
 }
 
-// Exposer les fonctions globalement
-// window.viewTicket = viewTicket;
-// window.closePrintModal = closePrintModal;
-// window.printTicket = printTicket;
-// window.refreshBookings = refreshBookings;
-// Dans la section d'initialisation, ajoutez :
-window.printTicketDirect = printTicketDirect;
+
+
+window.printTicket = printTicket;
 
