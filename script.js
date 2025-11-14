@@ -895,7 +895,6 @@ async function loadDestinations() {
 
             if (selectedOption.value) {
                 const dest = JSON.parse(selectedOption.getAttribute("data-destination"));
-                
                 document.getElementById("destination-name").textContent = dest.name;
                 document.getElementById("destination-description").textContent = dest.description;
                 document.getElementById("destination-duration").textContent = dest.travelDuration;
@@ -1492,8 +1491,6 @@ function getSession() {
     const session = localStorage.getItem('session');
     return session ? JSON.parse(session) : null;
 }
-
-
 
 window.printTicket = printTicket;
 
