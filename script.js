@@ -67,7 +67,7 @@ function updatePriceDisplay() {
             
             priceAmount.textContent = `$${totalPrice.toLocaleString()}`;
             
-            // Afficher les détails du calcul
+            // Détails du calcul
             if (priceDetails) {
                 priceDetails.innerHTML = `
                     <div class="text-left text-sm space-y-1 mt-2">
@@ -129,7 +129,7 @@ function setupPriceCalculation() {
     updatePriceDisplay();
 }
 
-// === VALIDATION SYSTEM ===
+// === System de validation ===
 function validateField(input) {
   const type = input.dataset.validation;
   const value = input.value.trim();
@@ -184,7 +184,7 @@ function setupInputValidation() {
   });
 }
 
-// === SESSION MANAGEMENT ===
+// === gestion des sessions ===
 function findUser(email, password) {
     return USERS.find(u => u.email === email && u.password === password);
 }
@@ -212,7 +212,7 @@ function isLoggedIn() {
     return s && s.isLoggedIn;
 }
 
-// === UI MANAGEMENT ===
+// === gestion UI ===
 function updateHeader() {
     const slot = document.getElementById("account-slot");
     const mobileSlot = document.getElementById("mobile-account-slot");
@@ -296,7 +296,7 @@ function setupLoginForm() {
     });
 }
 
-// === BOOKING MANAGEMENT ===
+// === nouvelle booking ===
 function saveBooking(bookingData) {
     const bookings = getBookings();
     const newBooking = {
@@ -591,7 +591,7 @@ function printTicket(bookingId) {
     },500);
 }
 
-// === BOOKING PAGE FUNCTIONS ===
+// === Page booking ===
 function createStars() {
     const container = document.getElementById("stars-container");
     if (!container) return;
@@ -661,7 +661,7 @@ function updateMaxPassengers() {
     }
 }
 
-// === Gestion de passanger ===
+// === Gestion de passager ===
 function addPassengerForm() {
     if (passengerCount < maxPassengers) {
         passengerCount++;
@@ -744,7 +744,7 @@ function removePassengerForm(index) {
     }
 }
 
-// === DATA LOADING ===
+// === Data loading ===
 async function loadAccommodations() {
     try {
         const fallbackData = {
@@ -951,7 +951,7 @@ function showAccommodationsForDestination(destination) {
     updatePriceDisplay();
 }
 
-// === FORM MANAGEMENT ===
+// === Gestion des formulaires ===
 function saveFormData() {
     const formData = {
         destination: document.getElementById("destination")?.value || "",
@@ -1124,7 +1124,7 @@ function showError(input, message) {
     input.classList.remove("input-success");
 }
 
-// === MOBILE MENU ===
+// === Nav bar mobile ===
 function setupMobileMenu() {
     const mobileMenuButton = document.getElementById("mobile-menu-button");
     const mobileMenu = document.getElementById("mobile-menu");
@@ -1136,7 +1136,7 @@ function setupMobileMenu() {
     }
 }
 
-// === INITIALISATION ===
+// === Initialisation ===
 document.addEventListener("DOMContentLoaded", function() {
     updateHeader();
     setupLoginForm();
@@ -1221,7 +1221,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
     
-    // Page spécifique: My Bookings
+    // Page spécifique (My Bookings)
     if (window.location.pathname.includes("my-bookings.html")) {
         createStars();
         loadBookings();
@@ -1368,15 +1368,11 @@ function getDestinationDuration(destinationName) {
 
 
 // === FONCTIONS DE GESTION DES RÉSERVATIONS ===
-
-// Toutes les réservations
 function getBookings() {
     const bookings = localStorage.getItem('userBookings');
     return bookings ? JSON.parse(bookings) : [];
 }
 
-
-// Afficher les réservations
 function loadBookings() {
     const container = document.getElementById('bookings-container');
     const totalBookingsEl = document.getElementById('total-bookings');
@@ -1468,14 +1464,14 @@ function loadBookings() {
     `).join('');
 }
 
-// Initialisation au chargement de la page
+// Initialisation au chargement page
 document.addEventListener('DOMContentLoaded', function() {
     if (window.location.pathname.includes('my-bookings.html')) {
         loadBookings();
     }
 });
 
-// === GESTION dE SESSION ===
+// === Gestion de session ===
 
 function isLoggedIn() {
     const session = localStorage.getItem('session');
