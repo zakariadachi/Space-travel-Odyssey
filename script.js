@@ -1,9 +1,6 @@
-// script.js
-
 // === CONFIGURATION ===
 const USERS = [
-    { email: "user1@space.com", password: "pass1234", name: "Jane Doe" },
-    { email: "user2@space.com", password: "moonbase42", name: "John Moon" }
+    { email: "ziko@gmail.com", password: "ziko1234", name: "Ziko DACHI" },
 ];
 
 const SESSION_KEY = "session";
@@ -11,20 +8,20 @@ const BOOKING_DATA_KEY = "bookingFormData";
 const PENDING_BOOKING_KEY = "pendingBooking";
 const BOOKINGS_KEY = "userBookings";
 
-// Regex patterns for validation
+// Regex patterns
 const patterns = {
   name: /^[A-Za-zÀ-ÿ\s'-]{3,}$/,
   email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   phone: /^\+212\s[6-7]\s?\d{2}\s?\d{2}\s?\d{2}\s?\d{2}\s?$/
 };
 
-// Variables globales
+// globales variables
 let accommodationsData = [];
 let destinationsData = [];
 let passengerCount = 1;
 let maxPassengers = 1;
 
-// === PRICE CALCULATION ===
+// === Calculer le prix total ===
 function calculateTotalPrice() {
     const destinationSelect = document.getElementById("destination");
     const accommodation = document.getElementById("accommodation");
@@ -43,8 +40,6 @@ function calculateTotalPrice() {
     
     const passengerForms = document.querySelectorAll(".passenger-form");
     const numberOfPersons = passengerForms.length;
-    
-    // Calculate total price
     const totalPrice = destinationPrice + (travelDays * 2 * pricePerDay * numberOfPersons);
     
     return totalPrice;
