@@ -334,7 +334,7 @@ function getBookings() {
 
 function loadBookings() {
     const container = document.getElementById("bookings-container");
-    const totalBookingsEl = document.getElementById("total-bookings");
+    // const totalBookingsEl = document.getElementById("total-bookings");
     const confirmedBookingsEl = document.getElementById("confirmed-bookings");
     const totalSpentEl = document.getElementById("total-spent");
     
@@ -1703,10 +1703,10 @@ function getBookings() {
 }
 
 // Fonction pour rafraîchir l'affichage des réservations
-function refreshBookings() {
-    loadBookings();
-    alert('Bookings refreshed successfully!');
-}
+// function refreshBookings() {
+//     loadBookings();
+//     alert('Bookings refreshed successfully!');
+// }
 
 // Fonction pour charger et afficher les réservations
 function loadBookings() {
